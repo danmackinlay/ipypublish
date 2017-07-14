@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Note, updated version of 
+# Note, updated version of
 # https://github.com/ipython/ipython-in-depth/blob/master/tools/nbmerge.py
 """
 usage:
@@ -16,15 +16,19 @@ import re
 
 import nbformat
 
-def natural_sort(l): 
-    convert = lambda text: int(text) if text.isdigit() else text.lower() 
-    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
-    return sorted(l, key = alphanum_key)
-    
+
+def natural_sort(l):
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [
+        convert(c) for c in re.split('([0-9]+)', key)
+    ]
+    return sorted(l, key=alphanum_key)
+
+
 def merge_notebooks(directory):
-    
+
     merged = None
-    for fname in natural_sort(glob.glob(os.path.join(directory,'*.ipynb'))):
+    for fname in natural_sort(glob.glob(os.path.join(directory, '*.ipynb'))):
         with io.open(fname, 'r', encoding='utf-8') as f:
             nb = nbformat.read(f, as_version=4)
         if merged is None:
@@ -42,10 +46,11 @@ def merge_notebooks(directory):
     else:
         print(nbformat.writes(merged).encode('utf-8'))
 
+
 if __name__ == '__main__':
     notebooks = sys.argv[1]
     if not notebooks:
         print(__doc__, file=sys.stderr)
         sys.exit(1)
-        
+
     merge_notebooks(notebooks)
